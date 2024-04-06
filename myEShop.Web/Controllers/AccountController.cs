@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using myEShop.Web.Models;
 using myEShop.Web.Models.ViewModels;
@@ -13,9 +14,10 @@ public class AccountController : Controller
 {
 
     private readonly myEShopContext _context;
-    public AccountController(myEShopContext context)
+    private readonly UserManager<IdentityUser> _userManager;
+    public AccountController(UserManager<IdentityUser> userManager)
     {
-        _context = context;
+        _userManager = userManager;
     }
 
     [HttpGet]
@@ -75,28 +77,30 @@ public class AccountController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Register(RegisterViewModel model)
+    public async Task<IActionResult> Register(RegisterViewModel model)
     {
         if (!ModelState.IsValid)
             return View(model);
 
-        if (IsExistEmail(model.Email.ToLower()))
+        IdentityUser user = new IdentityUser
         {
-
-            ModelState.AddModelError("Email", "The entered email is already registered");
-            return View(model);
+            Email = model.Email,
+            UserName = model.Email
+        };
+        var result = await _userManager.CreateAsync(user, model.Password);
+        if (result.Succeeded)
+        {
+            return View("SuccessRegister", model);
+        }
+        else
+        {
+            foreach (var err in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, err.Description);
+            }
         }
 
-        User user = new User
-        {
-            Email = model.Email.ToLower(),
-            Password = model.Password,
-            RegisterDate = DateTime.Now,
-            IsAdmin = false
-        };
-        AddUser(user);
-
-        return View("SuccessRegister", model);
+        return View(model);
     }
 
     [HttpPost]
@@ -109,29 +113,7 @@ public class AccountController : Controller
     [HttpGet]
     public IActionResult AccessDenied(string returnUrl)
     {
-
         return View();
     }
 
-
-
-
-    private bool IsExistEmail(string email)
-    {
-        return _context.Users.Any(x => x.Email == email);
-    }
-
-
-    private void AddUser(User user)
-    {
-        _context.Add(user);
-        _context.SaveChanges();
-
-    }
-
-    private User GetUser(string email, string password)
-    {
-        var em = email.ToLower();
-        return _context.Users.SingleOrDefault(x => x.Email == em && x.Password == password);
-    }
 }
