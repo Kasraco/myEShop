@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+@inject SignInManager<IdentityUser> SignInManager;
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -40,7 +44,7 @@
                     @await Component.InvokeAsync("ProductInBasketComponent")
 
 
-                    @if (User!.Identity!.IsAuthenticated)
+                    @if (SignInManager.IsSignedIn(User))
                     {
                         <div class="col-1">
                             @if (User!.IsInRole("Admin"))
