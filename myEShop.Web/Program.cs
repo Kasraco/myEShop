@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using myEShop.Web;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 
@@ -14,7 +17,13 @@ builder.Services.AddDbContext<myEShopContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddDbContext<IdentityDbContext>(options =>
 
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+    OptionsBuilder => OptionsBuilder.MigrationsAssembly("myEShop.Web")
+));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<IdentityDbContext>().AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                   .AddCookie(options =>
