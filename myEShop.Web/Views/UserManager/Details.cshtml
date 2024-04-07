@@ -1,4 +1,4 @@
-@model myEShop.Web.Models.User
+@model myEShop.Web.Models.ViewModels.AdminUserEditViewModel
 
 @{
     Layout = "_AdminLayout";
@@ -17,12 +17,14 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Email)
         </dd>
+
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Password)
+            @Html.DisplayNameFor(model => model.UserName)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Password)
+            @Html.DisplayFor(model => model.UserName)
         </dd>
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.RegisterDate)
         </dt>

@@ -3,46 +3,70 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using myEShop.Web;
 using myEShop.Web.Models;
+using myEShop.Web.Models.ViewModels;
 
 namespace myEShop.Web.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class UserManagerController : Controller
     {
-        private readonly myEShopContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
 
-        public UserManagerController(myEShopContext context)
+        public UserManagerController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
         {
-            _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         // GET: UserManager
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Users.ToListAsync());
+            var userlist = _userManager.Users.ToList();
+            return View(userlist);
         }
 
         // GET: UserManager/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            //Check if User Exists in the Database
             if (user == null)
             {
+                ViewBag.ErrorMessage = $"User with Id = {id} cannot be found";
                 return NotFound();
             }
 
-            return View(user);
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            var model = new AdminUserEditViewModel
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                UserName = user.UserName,
+                RegisterDate = user.RegisterDate,
+                Roles = userRoles,
+                IsAdmin = false
+            };
+
+            foreach (var bt in userRoles)
+                if (bt == "Admin")
+                    model.IsAdmin = true;
+
+
+            return View(model);
         }
 
         // GET: UserManager/Create
@@ -56,31 +80,73 @@ namespace myEShop.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,Email,Password,RegisterDate,IsAdmin")] User user)
+        public async Task<IActionResult> Create([Bind("Email,Password,ConfirmPassword,IsAdmin")] AdminRegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ApplicationUser user = new ApplicationUser
+                {
+                    Email = model.Email,
+                    UserName = model.Email,
+                    RegisterDate = model.RegisterDate
+                };
+
+                string rolename = model.IsAdmin ? "Admin" : "User";
+                var resultuser = await _userManager.CreateAsync(user, model.Password);
+                if (resultuser.Succeeded)
+                {
+
+                    var resultrole = await _userManager.AddToRoleAsync(user, rolename);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    foreach (var error in resultuser.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+
+
             }
-            return View(user);
+            return View(model);
         }
 
         // GET: UserManager/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            //Check if User Exists in the Database
             if (user == null)
             {
+                ViewBag.ErrorMessage = $"User with Id = {id} cannot be found";
                 return NotFound();
             }
-            return View(user);
+
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            var model = new AdminUserEditViewModel
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                UserName = user.UserName,
+                RegisterDate = user.RegisterDate,
+                Roles = userRoles,
+                IsAdmin = false
+            };
+
+            foreach (var bt in userRoles)
+                if (bt == "Admin")
+                    model.IsAdmin = true;
+
+
+            return View(model);
         }
 
         // POST: UserManager/Edit/5
@@ -88,34 +154,47 @@ namespace myEShop.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,Email,Password,RegisterDate,IsAdmin")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,Email,UserName,RegisterDate,IsAdmin,Roles")] AdminUserEditViewModel model)
         {
-            if (id != user.UserId)
+            if (id != model.UserId)
             {
                 return NotFound();
             }
 
+
             if (ModelState.IsValid)
             {
-                try
+                var user = await _userManager.FindByIdAsync(model.UserId.ToString());
+
+                user.Email = model.Email;
+                user.UserName = model.UserName;
+                user.RegisterDate = model.RegisterDate;
+
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
                 {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
+                    var roleusers = await _userManager.GetRolesAsync(user);
+                    foreach (var r in roleusers)
+                        await _userManager.RemoveFromRoleAsync(user, r);
+
+
+                    string rolenme = model.IsAdmin ? "Admin" : "User";
+                    await _userManager.AddToRoleAsync(user, rolenme);
+
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!UserExists(user.UserId))
+                    foreach (var error in result.Errors)
                     {
-                        return NotFound();
+                        ModelState.AddModelError("", error.Description);
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    return View(model);
                 }
-                return RedirectToAction(nameof(Index));
+
+
             }
-            return View(user);
+
+            return View(model);
         }
 
         // GET: UserManager/Delete/5
@@ -126,34 +205,70 @@ namespace myEShop.Web.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            //Check if User Exists in the Database
             if (user == null)
             {
+                ViewBag.ErrorMessage = $"User with Id = {id} cannot be found";
                 return NotFound();
             }
 
-            return View(user);
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            var model = new AdminUserEditViewModel
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                UserName = user.UserName,
+                RegisterDate = user.RegisterDate,
+                Roles = userRoles,
+                IsAdmin = false
+            };
+
+            foreach (var bt in userRoles)
+                if (bt == "Admin")
+                    model.IsAdmin = true;
+
+            return View(model);
         }
 
         // POST: UserManager/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int UserId)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user != null)
+            //First Fetch the User you want to Delete
+            var user = await _userManager.FindByIdAsync(UserId.ToString());
+
+            if (user == null)
             {
-                _context.Users.Remove(user);
+                // Handle the case where the user wasn't found
+                ViewBag.ErrorMessage = $"User with Id = {UserId} cannot be found";
+                return NotFound();
             }
+            else
+            {
+                //Delete the User Using DeleteAsync Method of UserManager Service
+                var result = await _userManager.DeleteAsync(user);
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                if (result.Succeeded)
+                {
+                    // Handle a successful delete
+                    return RedirectToAction(nameof(UserManagerController.Index), "UserManager");
+                }
+                else
+                {
+                    // Handle failure
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+
+                return RedirectToAction(nameof(UserManagerController.Index), "UserManager");
+            }
         }
 
-        private bool UserExists(int id)
-        {
-            return _context.Users.Any(e => e.UserId == id);
-        }
     }
 }

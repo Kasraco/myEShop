@@ -1,14 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using myEShop.Web.Models;
 
 namespace myEShop.Web;
 
-public class myEShopContext : DbContext
+public class myEShopContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>
 {
-    public myEShopContext(DbContextOptions<myEShopContext> Options) : base(Options)
+
+    private string hashedPassword = string.Empty;
+    public myEShopContext(DbContextOptions<myEShopContext> options) : base(options)
     {
 
     }
+
 
     public DbSet<Category> Categories { get; set; }
     public DbSet<Product> Products { get; set; }
@@ -20,28 +25,32 @@ public class myEShopContext : DbContext
     public DbSet<Order> Orders { get; set; }
     public DbSet<OrderDetail> OrderDetails { get; set; }
 
-
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ApplicationRole>().HasData(
+     new ApplicationRole { Name = "Admin", NormalizedName = "ADMIN", Id = 1 },
+     new ApplicationRole { Name = "User", NormalizedName = "USER", Id = 2 }
+ );
 
-        modelBuilder.Entity<CategoryToProduct>().HasKey(x => new { x.ProductId, x.CategoryId });
+        var PH = new PasswordHasher<ApplicationUser>();
+        string hp = PH.HashPassword(null, "1qaz!QAZ");
+        modelBuilder.Entity<ApplicationUser>().HasData(
+            new ApplicationUser { Id = 1, UserName = "admin@gmail.com", NormalizedUserName = "ADMIN@GMAIL.COM", Email = "admin@gmail.com", NormalizedEmail = "ADMIN@GMAIL.COM", EmailConfirmed = true, SecurityStamp = string.Empty, PasswordHash = hp }
+        );
 
-        // modelBuilder.Entity<Product>(
-        //     p =>
-        //     {
-        //         p.HasKey(x => x.Id);
-        //         p.HasOne<Item>(x => x.Item).WithOne(x => x.Product).HasForeignKey<Item>(x => x.Id);
-        //     }
-        // );
+        modelBuilder.Entity<IdentityUserRole<int>>().HasData(
+            new IdentityUserRole<int> { RoleId = 1, UserId = 1 }
+        );
 
         modelBuilder.Entity<Item>(
-            i =>
-            {
-                i.Property(x => x.Price).HasColumnType("Money");
-                i.HasKey(x => x.Id);
-            }
-        );
+                   i =>
+                   {
+                       i.Property(x => x.Price).HasColumnType("Money");
+                       i.HasKey(x => x.Id);
+                   }
+               );
+
+        modelBuilder.Entity<CategoryToProduct>().HasKey(x => new { x.ProductId, x.CategoryId });
 
         modelBuilder.Entity<Category>().HasData(
             new Category { Id = 1, Name = "Man", Description = "Man Deress" },
@@ -73,6 +82,6 @@ public class myEShopContext : DbContext
             new CategoryToProduct() { CategoryId = 3, ProductId = 3 }
         );
         base.OnModelCreating(modelBuilder);
-    }
 
+    }
 }

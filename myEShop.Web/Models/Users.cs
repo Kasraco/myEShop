@@ -3,9 +3,16 @@ using Microsoft.AspNetCore.Identity;
 
 namespace myEShop.Web.Models;
 
-public class User : IdentityUser<int>
+public class ApplicationUser : IdentityUser<int>
 {
 
     public DateTime RegisterDate { get; set; }
     public List<Order> orders { get; set; }
 }
+
+
+public class ApplicationRole : IdentityRole<int>
+{
+
+}
+

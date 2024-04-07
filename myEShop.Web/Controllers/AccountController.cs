@@ -14,10 +14,10 @@ public class AccountController : Controller
 {
 
     private readonly myEShopContext _context;
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly RoleManager<IdentityUser> _roleManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
-    public AccountController(UserManager<IdentityUser> userManager, RoleManager<IdentityUser> roleManager, SignInManager<IdentityUser> signInManager)
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    public AccountController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, SignInManager<ApplicationUser> signInManager)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -92,15 +92,16 @@ public class AccountController : Controller
         if (!ModelState.IsValid)
             return View(model);
 
-        IdentityUser user = new IdentityUser
+        ApplicationUser user = new ApplicationUser
         {
             Email = model.Email,
-            UserName = model.Email
+            UserName = model.Email,
+            RegisterDate = DateTime.Now
         };
         var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {
-            var rolResult = await _userManager.AddToRoleAsync(user,"User");
+            var rolResult = await _userManager.AddToRoleAsync(user, "User");
             return View("SuccessRegister", model);
         }
         else

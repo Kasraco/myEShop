@@ -15,7 +15,7 @@ public class Order
     public bool IsFinaly { get; set; }
 
     [ForeignKey("UserId")]
-    public User User { get; set; }
+    public ApplicationUser User { get; set; }
     public ICollection<OrderDetail> OrderDetails { get; set; }
 
 }

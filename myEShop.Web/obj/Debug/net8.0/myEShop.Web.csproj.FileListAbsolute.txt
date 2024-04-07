@@ -9,6 +9,10 @@ E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\myEShop.Web.pdb
 E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Azure.Core.dll
 E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Azure.Identity.dll
 E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Humanizer.dll
+E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.UI.dll
 E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.AspNetCore.Razor.Language.dll
 E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.Build.dll
@@ -33,6 +37,10 @@ E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.EntityFrameworkC
 E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
 E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.Extensions.FileProviders.Embedded.dll
+E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
+E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
+E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
 E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.Identity.Client.dll
 E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.Identity.Client.Extensions.Msal.dll
 E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
@@ -232,9 +240,11 @@ E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\myEShop.Web.GeneratedMSBui
 E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\myEShop.Web.AssemblyInfoInputs.cache
 E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\myEShop.Web.AssemblyInfo.cs
 E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\myEShop.Web.csproj.CoreCompileInputs.cache
+E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\myEShop.Web.MvcApplicationPartsAssemblyInfo.cs
 E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\myEShop.Web.MvcApplicationPartsAssemblyInfo.cache
 E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\myEShop.Web.RazorAssemblyInfo.cache
 E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\myEShop.Web.RazorAssemblyInfo.cs
+E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\myEShop.Web.sourcelink.json
 E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\staticwebassets.build.json
 E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\staticwebassets.development.json
 E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\staticwebassets\msbuild.myEShop.Web.Microsoft.AspNetCore.StaticWebAssets.props
@@ -251,11 +261,3 @@ E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\refint\myEShop.Web.dll
 E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\myEShop.Web.pdb
 E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\myEShop.Web.genruntimeconfig.cache
 E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\ref\myEShop.Web.dll
-E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
-E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
-E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
-E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
-E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
-E:\Project\milad\myEShop\myEShop.Web\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
-E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\myEShop.Web.sourcelink.json
-E:\Project\milad\myEShop\myEShop.Web\obj\Debug\net8.0\myEShop.Web.MvcApplicationPartsAssemblyInfo.cs
