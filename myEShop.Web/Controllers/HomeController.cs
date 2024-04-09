@@ -112,6 +112,16 @@ public class HomeController : Controller
     public IActionResult Detail(int ItemId)
     {
         var p = _context.Products.Include(x => x.Item).SingleOrDefault(x => x.Id == ItemId);
+        var pcomments = _context.Comments
+                                .Where(x => x.ProductId == ItemId && x.IsPublished == true)
+                                .Select(s => new CommentViewModel
+                                {
+                                    CommentName = s.CommentName,
+                                    CommentText = s.CommentText,
+                                    Email = s.Email,
+                                    ProductId = s.ProductId,
+                                })
+                                .ToList();
         if (p == null)
             return NotFound();
 
@@ -123,7 +133,9 @@ public class HomeController : Controller
         var vm = new ProductDetailViewModel()
         {
             product = p,
-            categories = categories
+            categories = categories,
+            commentViewModels = pcomments,
+            productComment = new AddCommentViewModel()
         };
         return View(vm);
     }
@@ -137,6 +149,34 @@ public class HomeController : Controller
         order.IsFinaly = true;
         _context.SaveChanges();
         return RedirectToAction("ShowCard");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateComment([Bind("Email,CommentName,CommentText,ProductId")] AddCommentViewModel model)
+    {
+
+        ViewBag.ProductId = model.ProductId;
+        ViewBag.Email = model.Email;
+        if (!ModelState.IsValid)
+        {
+            ModelState.AddModelError(string.Empty, "Please enter the information correctly");
+            return View("ErrorComment", model);
+        }
+
+
+        Comment comment = new Comment
+        {
+            CommentName = model.CommentName,
+            CommentText = model.CommentText,
+            Email = model.Email,
+            ProductId = model.ProductId
+        };
+        _context.Add(comment);
+        await _context.SaveChangesAsync();
+        return View("AddCommentSuccess");
+
+
     }
 
 
