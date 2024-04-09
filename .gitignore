@@ -396,7 +396,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-KRBCMS.Web/outputemployee.txt
-KRBCMS.Web/outputtxt1.txt
-KRBCMS.Web/NationalCode_NotExist.txt
-KRBCMS.Web/data/purchase.xlsx
+myEShop.Web/bin/Debug/net8.0/myEShop.Web.dll
