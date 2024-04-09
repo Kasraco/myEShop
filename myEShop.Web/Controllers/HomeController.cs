@@ -141,7 +141,7 @@ public class HomeController : Controller
 
 
     [Route("ContactUs")]
-    public IActionResult ContactUs()
+    public async Task<IActionResult> ContactUs()
     {
         return View();
     }
