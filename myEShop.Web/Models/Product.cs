@@ -18,4 +18,5 @@ public class Product
     public Item Item { get; set; }
 
     public ICollection<OrderDetail> OrderDetails { get; set; }
+    public ICollection<Comment> Comments { get; set; }
 }
