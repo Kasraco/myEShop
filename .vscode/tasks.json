@@ -1,0 +1,24 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "dotnet",
+			"task": "watch myEShop.Web",
+			"file": "E:\\Project\\milad\\myEShop\\myEShop.Web\\myEShop.Web.csproj",
+			"problemMatcher": [],
+			"label": "dotnet: watch myEShop.Web"
+		},
+		{
+			"label": "build",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}/myEShop.sln",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary;ForceNoAlign"
+			],
+			"problemMatcher": "$msCompile"
+		}
+	]
+}

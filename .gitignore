@@ -396,3 +396,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+<<<<<<< HEAD
+=======
+myEShop.Web/bin/Debug/net8.0/myEShop.Web.dll
+>>>>>>> main

@@ -1,0 +1,33 @@
+@model myEShop.Web.Models.ViewModels.ProductDetailViewModel
+
+@{
+    ViewData["Title"] = "Product " + Model.product.Name;
+}
+
+<div>
+    <h1 class="display-5">@Model.product.Name</h1>
+    <hr />
+    <div class="row">
+        <div class="col-3">
+            <img src="~/Images/@Model.product.ImageName" alt="@Model.product.Name" class="img-thumbnail" height="320" width="320" />
+        </div>
+        <div class="col-9">
+
+            <p class="text-justify">@Model.product.Description</p>
+            <p>@Model.product.Item.Price</p>
+
+            <dl>
+                <h5>Categories</h5>
+                @foreach (var cat in Model.categories)
+                {
+                    <dt><a href="/Group/@cat.Id/@cat.Name">@cat.Name</a></dt>
+                    <dd>@cat.Description</dd>
+                }
+            </dl>
+
+            <div>
+                <a class="btn btn-primary" asp-action="AddToCard" asp-controller="Home" asp-route-ItemId="@Model.product.ItemId">Add To Card</a>
+            </div>
+        </div>
+        </>
+    </div>
